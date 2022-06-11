@@ -2,7 +2,7 @@ package ve.usb.libGrafo
 
 import java.io.File
 
-public class GrafoDirigido : Grafo<Vertice> {
+public class GrafoDirigido<Arco> : Grafo<Lado> {
 
     override var numDeVertices : Int = 0
     var arregloVertices = ArrayList<Vertice>(numDeVertices)
@@ -51,7 +51,36 @@ public class GrafoDirigido : Grafo<Vertice> {
         }
     }
 
+    override fun obtenerNumeroDeLados(): Int  = numDeLados
 
+    override fun obtenerNumeroDeVertices() : Int = numDeVertices
+
+    override fun adyacentes(v: Int) : Iterable<Arco>{
+        if (v > numDeVertices) throw RuntimeException("El vertice ${v} no existe.")
+        return this.filter {it.fuente() == v}
+    }
+
+    override fun grado(v: Int) : Int {
+        var mayorGrado :Int = 0        
+        for (vertice in arregloVertices){
+            mayorGrado = max(mayorGrado, vertice.gradoExterior + vertice.gradoInterior)
+        }
+        return mayorGrado
+    }
+
+    inner class iteraGrafo<Lado>(I: Grafo<Lado>): Iterator<Lado> {
+        var actual = I.cabeza
+
+        override fun hasNext(): Boolean = (actual != null)
+        override fun next(): Lado {
+            if(actual == null) throw NoSuchElementException("No quedan elementos que iterar")
+            val valor = actual!!.valor
+            actual = actual?.proximo
+            return valor
+        }
+    }
+
+    override operator fun iterator() : Iterator<Arco> = iteraGrafo(this)
     /* Agrega un arco al grafo recibe como parametro un Arco complejidad: O(1)
        retorna true
      */
@@ -74,18 +103,15 @@ public class GrafoDirigido : Grafo<Vertice> {
         return arregloVertices
     }
 
-    override fun obtenerArregloVerticesCosto(): ArrayList<VerticeCosto> {
-        TODO("Not yet implemented")
-    }
     // Retorna el grado de un vertice del grafo complejidad: O(1)
     // El grado es la suma del grado interior y el exterior
     // recibe como parametros un int v que debe ser el id del vertice
-
+/* 
     override fun grado(v: Int) : Int {
 
         return arregloVertices[v].gradoInterior+arregloVertices[v].gradoExterior
     }
-
+*/
     // Retorna el grado exterior de un vertice del grafo complejidad: O(1)
     // recibe como parametros un int v que debe ser el id del vertice
     fun gradoExterior(v: Int) : Int {
@@ -98,23 +124,6 @@ public class GrafoDirigido : Grafo<Vertice> {
         return arregloVertices[v].gradoInterior
     }
 
-    // Retorna el número de lados del grafo complejidad: O(1)
-    override fun obtenerNumeroDeLados() : Int {
-        return numDeLados
-    }
-
-    // Retorna el número de vértices del grafo complejidad: O(1)
-    override fun obtenerNumeroDeVertices() : Int {
-        return numDeVertices
-    }
-
-    /* 
-     Retorna los adyacentes de v, en este caso los lados que tienen como vértice inicial a v. 
-     Si el vértice no pertenece al grafo se lanza una RuntimeException
-     */
-    //override fun adyacentes(v: Int) : Iterable<Arco> {
-    //}
-
     /* Retorna los lados adyacentes de un lado l. 
      Se tiene que dos lados son iguales si tiene los mismos extremos. 
      Si un lado no pertenece al grafo se lanza una RuntimeException.
@@ -122,10 +131,7 @@ public class GrafoDirigido : Grafo<Vertice> {
     //fun ladosAdyacentes(l: Arco) : Iterable<Arco> {
     //}
     
-    // Retorna todos los lados del digrafo
-    //override operator fun iterator() : Iterator<Arco> {
-    //}
-     
+
     /* Retorna un string que representa al grafo
        Da cada vertice junto a su lista de adyacencia
        complejidad: O(V*E)

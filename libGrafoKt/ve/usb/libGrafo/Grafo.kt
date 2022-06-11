@@ -1,49 +1,60 @@
 package ve.usb.libGrafo
 import java.util.LinkedList
 
-interface Grafo<Vertice> : Iterable<Vertice> {
+interface Grafo<Lado> : Iterable<Lado> {
 
-    var cabeza: Nodo<Vertice>?
+    var cabeza: Nodo<Lado>?
     var numDeVertices: Int
-    // Retorna el número de lados del grafo
+    var numDeLados: Int
+
+    /*  Retorna el número de lados del grafo
+     * Parametros: N/A
+     * Precondiciones: N/A
+     * Postcondiciones: obtenerNumeroDeLados() = numDeLados
+     * Costo: O(1)
+     */
     fun obtenerNumeroDeLados() : Int
 
-    // Retorna el número de vértices del grafo
+    /* Retorna el número de vértices del grafo
+     * Parametros: N/A
+     * Precondiciones: N/A
+     * Postcondiciones: obtenerNumeroDeVertices() = numDeVertices
+     * Costo: O(1)
+    */
     fun obtenerNumeroDeVertices() : Int
 
-    fun obtenerArregloVertices(): ArrayList<Vertice>
-
-    fun obtenerArregloVerticesCosto(): ArrayList<VerticeCosto>
     /*
-     Retorna los adyacentes de v, en este caso los lados que tienen como vértice inicial a v.
-     Si el vértice no pertenece al grafo se lanza una RuntimeException.
+     * Retorna los adyacentes de v, en este caso los lados que tienen como vértice inicial a v.
+     *Si el vértice no pertenece al grafo se lanza una RuntimeException.
+     * Parametros: v , el vertice cuyas adyacencias se quieren hallar
+     * Precondiciones: v representa a un vertice que existe en el grafo
+     * Postcondiciones: adyacentes = iterable con los lados adyacentes al vertice v
+     * Costo: O(|E|)
      */
-    //fun adyacentes(v: Int) : Iterable<Lado>
+    fun adyacentes(v: Int) : Iterable<Lado>
 
-    // Retorna el grado del grafo
+    /* Retorna el grado del grafo
+     * Parametros: v: Int
+     * Precondiciones: v es vertice del grafo
+     * Postcondiciones: grado() == grado maximo de todos los vertices en el grafo
+     * Costo: O(|V|) 
+     */ 
     fun grado(v: Int) : Int
 
-    /* Retorna un iterador de los lados del grafo.
-       El iterador debe ser creado en clase que implementa esta interface.
+    /* Retorna un iterador de todos los lados del grafo.
+     * Parametros: N/A
+     * Postcondiciones: devuelve un iterador que se puede utilizar para navegar los lados del
+     * grafo mediante un ciclo.
+     * Costo: O(1)
      */
-
+    override operator fun iterator() : Iterator<Lado> =
+        iteraGrafo(this)
     //abstract fun vertice(any: Any?)
 
-    fun esVacio(): Boolean
+    //fun esVacio(): Boolean
     //fun agregar(valor: Vertice): Grafo<Vertice>
 
-    class iteraGrafo<Vertice>(I: Grafo<Vertice>): Iterator<Vertice> {
-        var actual = I.cabeza
-        override fun hasNext(): Boolean = (actual != null)
-        override fun next(): Vertice {
-            if(actual == null) throw NoSuchElementException("No quedan elementos que iterar")
-            val valor = actual!!.valor
-            actual = actual?.proximo
-            return valor
-        }
-    }
-    override operator fun iterator() : Iterator<Vertice> =
-        iteraGrafo(this)
+
 
 }
 //Clase vertice donde se esta el id del vertice y su lista de adyacencia
