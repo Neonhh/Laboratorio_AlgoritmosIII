@@ -2,12 +2,14 @@ package ve.usb.libGrafo
 
 import java.io.File
 
-public class GrafoDirigido<Arco> : Grafo<Lado> {
-
+public class GrafoDirigido : Grafo {
+    
+    override var numDeLados: Int =0
+    var cabeza: Nodo<Arco>? = null
     override var numDeVertices : Int = 0
+    
     var arregloVertices = ArrayList<Vertice>(numDeVertices)
-    var numDeLados: Int =0
-    override var cabeza: Nodo<Vertice>? = null
+    
 
     override fun esVacio(): Boolean = (numDeVertices == 0)
 
@@ -37,7 +39,6 @@ public class GrafoDirigido<Arco> : Grafo<Lado> {
                 }
                 contador += 1
             } else if (contador == 1) {
-                val numDeLados: Int = it.toInt()
                 contador+=1
             } else {
                 val datosLado = it.split(" ")
@@ -55,24 +56,25 @@ public class GrafoDirigido<Arco> : Grafo<Lado> {
 
     override fun obtenerNumeroDeVertices() : Int = numDeVertices
 
-    override fun adyacentes(v: Int) : Iterable<Arco>{
+    override fun adyacentes(v: Int) : Iterable<Lado>{
         if (v > numDeVertices) throw RuntimeException("El vertice ${v} no existe.")
-        return this.filter {it.fuente() == v}
+        return filter {it.a == v}
     }
 
     override fun grado(v: Int) : Int {
         var mayorGrado :Int = 0        
         for (vertice in arregloVertices){
-            mayorGrado = max(mayorGrado, vertice.gradoExterior + vertice.gradoInterior)
+            val gradoVertice: Int = vertice.gradoExterior + vertice.gradoInterior
+            mayorGrado = maxOf(mayorGrado,gradoVertice)
         }
         return mayorGrado
     }
 
-    inner class iteraGrafo<Lado>(I: Grafo<Lado>): Iterator<Lado> {
+    inner class iteraGrafo(I: GrafoDirigido): Iterator<Arco> {
         var actual = I.cabeza
 
         override fun hasNext(): Boolean = (actual != null)
-        override fun next(): Lado {
+        override fun next(): Arco {
             if(actual == null) throw NoSuchElementException("No quedan elementos que iterar")
             val valor = actual!!.valor
             actual = actual?.proximo

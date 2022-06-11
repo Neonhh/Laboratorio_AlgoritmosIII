@@ -1,9 +1,8 @@
 package ve.usb.libGrafo
 import java.util.LinkedList
 
-interface Grafo<Lado> : Iterable<Lado> {
+interface Grafo : Iterable<Lado> {
 
-    var cabeza: Nodo<Lado>?
     var numDeVertices: Int
     var numDeLados: Int
 
@@ -47,12 +46,13 @@ interface Grafo<Lado> : Iterable<Lado> {
      * grafo mediante un ciclo.
      * Costo: O(1)
      */
-    override operator fun iterator() : Iterator<Lado> =
-        iteraGrafo(this)
+    override operator fun iterator() : Iterator<Lado>
     //abstract fun vertice(any: Any?)
 
-    //fun esVacio(): Boolean
+    fun esVacio(): Boolean
     //fun agregar(valor: Vertice): Grafo<Vertice>
+
+    fun obtenerArregloVertices(): ArrayList<Vertice>
 
 
 
