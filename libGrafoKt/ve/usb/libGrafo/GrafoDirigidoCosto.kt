@@ -2,12 +2,12 @@ package ve.usb.libGrafo
 
 import java.io.File
 
-public class GrafoDirigidoCosto : Grafo<Vertice> {
+public class GrafoDirigidoCosto : Grafo {
 
     override var numDeVertices: Int = 0
+    override var numDeLados: Int = 0
     var arregloVerticesCosto = ArrayList<VerticeCosto>(numDeVertices)
-    var numDeLados: Int = 0
-    override var cabeza: Nodo<Vertice>? = null
+    var cabeza: Nodo<ArcoCosto>? = null
 
 
     /* Agrega un arco al grafo recibe como parametro un ArcoCosto complejidad: O(1)
@@ -79,13 +79,10 @@ public class GrafoDirigidoCosto : Grafo<Vertice> {
             }
         }
     }
-    override fun obtenerArregloVerticesCosto(): ArrayList<VerticeCosto> {
+    fun obtenerArregloVerticesCosto(): ArrayList<VerticeCosto> {
         return arregloVerticesCosto
     }
 
-    override fun obtenerArregloVertices(): ArrayList<Vertice> {
-        TODO("Not yet implemented")
-    }
     // Retorna el grado de un vertice del grafo complejidad: O(1)
     // El grado es la suma del grado interior y el exterior
     // recibe como parametros un int v que debe ser el id del vertice
@@ -115,6 +112,17 @@ public class GrafoDirigidoCosto : Grafo<Vertice> {
         return numDeVertices
     }
 
+    override fun adyacentes(v: Int) : Iterable<ArcoCosto>{
+        if (v > numDeVertices) throw RuntimeException("El vertice ${v} no existe.")
+        var adyacentes: MutableList<ArcoCosto> = mutableListOf()
+        val iteradorArcos = iterator()
+        while (iteradorArcos.hasNext()){
+            val valor: ArcoCosto = iteradorArcos.next()
+            if (valor.fuente() == v) adyacentes.add(valor)
+        }
+        return adyacentes
+    }
+
     /* Retorna los adyacentes de v, en este caso los lados que tienen como vértice inicial a v.
        Si el vértice no pertenece al grafo se lanza una RuntimeException*/
     //override fun adyacentes(v: Int) : Iterable<ArcoCosto> {
@@ -137,6 +145,21 @@ public class GrafoDirigidoCosto : Grafo<Vertice> {
        cada vertice esta junto al coste del arco
        complejidad: O(V*E)
      */
+
+    inner class iteradorDigrafoCosto(I: GrafoDirigidoCosto): Iterator<ArcoCosto> {
+        var actual = I.cabeza
+
+        override fun hasNext(): Boolean = (actual != null)
+        override fun next(): ArcoCosto {
+            if(actual == null) throw NoSuchElementException("No quedan elementos que iterar")
+            val valor = actual!!.valor
+            actual = actual?.proximo
+            return valor
+        }
+    }
+
+    override operator fun iterator() : Iterator<ArcoCosto> = iteradorDigrafoCosto(this)
+    
     override fun toString() : String {
         var GrafString: String = ""
         for (vertice in arregloVerticesCosto){

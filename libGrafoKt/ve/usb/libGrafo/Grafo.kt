@@ -50,12 +50,6 @@ interface Grafo : Iterable<Lado> {
     //abstract fun vertice(any: Any?)
 
     fun esVacio(): Boolean
-    //fun agregar(valor: Vertice): Grafo<Vertice>
-
-    fun obtenerArregloVertices(): ArrayList<Vertice>
-
-
-
 }
 //Clase vertice donde se esta el id del vertice y su lista de adyacencia
 open class Vertice(val id: Int) : LinkedList<Int>(){
@@ -137,9 +131,7 @@ public class VerticeCosto(val costoId: Int) : Vertice(costoId) {
     }
 }
 
-//clase Nodo usada para iterar sobre la lista de vertices
-class Nodo<Vertice>(valor: Vertice){
-    var valor: Vertice = valor
-    var proximo: Nodo<Vertice>? = null
+class Nodo<Lado>(valor: Lado){
+    var valor: Lado = valor
+    var proximo: Nodo<Lado>? = null
 }
-

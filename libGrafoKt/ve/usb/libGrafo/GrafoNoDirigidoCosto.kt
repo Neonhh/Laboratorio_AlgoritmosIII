@@ -1,12 +1,12 @@
 package ve.usb.libGrafo
 import java.io.File
 
-public class GrafoNoDirigidoCosto: Grafo<Vertice> {
-
+public class GrafoNoDirigidoCosto: Grafo{
+    
+    override var numDeLados : Int = 0
     override var numDeVertices : Int = 0
     var arregloVerticesCosto = ArrayList<VerticeCosto>(numDeVertices)
-    var numDeAristas : Int = 0
-    override var cabeza: Nodo<Vertice>? = null
+    var cabeza: Nodo<AristaCosto>? = null
 
     override fun esVacio(): Boolean = (numDeVertices == 0)
 
@@ -37,7 +37,6 @@ public class GrafoNoDirigidoCosto: Grafo<Vertice> {
                 }
                 contador += 1
             } else if (contador == 1) {
-                val numDeLados: Int = it.toInt()
                 contador+=1
             } else {
                 val datosLado = it.split(" ")
@@ -65,26 +64,35 @@ public class GrafoNoDirigidoCosto: Grafo<Vertice> {
         arregloVerticesCosto[ver2Id].aggVerticelistaAdyacencia(ver1Id,cos)
         arregloVerticesCosto[ver2Id].aumentarGradoInterior()
         arregloVerticesCosto[ver2Id].aumentarGradoExterior()
-        numDeAristas += 1
+        numDeLados += 1
 
         return true
     }
     // Retorna el número de lados del grafo complejidad: O(1)
     override fun obtenerNumeroDeLados() : Int {
-        return numDeAristas
+        return numDeLados
     }
 
     // Retorna el número de vértices del grafo complejidad: O(1)
     override fun obtenerNumeroDeVertices() : Int {
         return numDeVertices
     }
-    override fun obtenerArregloVerticesCosto(): ArrayList<VerticeCosto> {
+
+    override fun adyacentes(v: Int) : Iterable<AristaCosto>{
+        if (v > numDeVertices) throw RuntimeException("El vertice ${v} no existe.")
+        var adyacentes: MutableList<AristaCosto> = mutableListOf()
+        val iteradorAristas = iterator()
+        while (iteradorAristas.hasNext()){
+            val valor: AristaCosto = iteradorAristas.next()
+            if (valor.primero() == v) adyacentes.add(valor)
+        }
+        return adyacentes
+    }
+
+    fun obtenerArregloVerticesCosto(): ArrayList<VerticeCosto> {
         return arregloVerticesCosto
     }
 
-    override fun obtenerArregloVertices(): ArrayList<Vertice> {
-        TODO("Not yet implemented")
-    }
     // Retorna los lados adyacentes al vértice v, es decir, los lados que contienen al vértice v
     //override fun adyacentes(v: Int) : Iterable<AristaCosto> {
     //}
@@ -106,6 +114,20 @@ public class GrafoNoDirigidoCosto: Grafo<Vertice> {
     override fun grado(v: Int) : Int {
         return arregloVerticesCosto[v].gradoInterior+arregloVerticesCosto[v].gradoExterior
     }
+
+    inner class iteradorGrafoCosto(I: GrafoNoDirigidoCosto): Iterator<AristaCosto> {
+        var actual = I.cabeza
+
+        override fun hasNext(): Boolean = (actual != null)
+        override fun next(): AristaCosto {
+            if(actual == null) throw NoSuchElementException("No quedan elementos que iterar")
+            val valor = actual!!.valor
+            actual = actual?.proximo
+            return valor
+        }
+    }
+
+    override operator fun iterator() : Iterator<AristaCosto> = iteradorGrafoCosto(this)
 
     /* Retorna un string que representa al grafo
        Da cada vertice junto a su lista de adyacencia

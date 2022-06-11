@@ -11,7 +11,7 @@ public class GrafoDirigido : Grafo {
     var arregloVertices = ArrayList<Vertice>(numDeVertices)
     
 
-    override fun esVacio(): Boolean = (numDeVertices == 0)
+    override fun esVacio(): Boolean = (numDeLados == 0)
 
     // Se construye un grafo dirigido a partir del número de vértices complejidad: O(V)
     // recibe como argumentos un entero que debe ser el numero de vertices
@@ -56,10 +56,7 @@ public class GrafoDirigido : Grafo {
 
     override fun obtenerNumeroDeVertices() : Int = numDeVertices
 
-    override fun adyacentes(v: Int) : Iterable<Lado>{
-        if (v > numDeVertices) throw RuntimeException("El vertice ${v} no existe.")
-        return filter {it.a == v}
-    }
+
 
     override fun grado(v: Int) : Int {
         var mayorGrado :Int = 0        
@@ -70,26 +67,34 @@ public class GrafoDirigido : Grafo {
         return mayorGrado
     }
 
-    inner class iteraGrafo(I: GrafoDirigido): Iterator<Arco> {
+    inner class iteradorDigrafo(I: GrafoDirigido): Iterator<Arco> {
         var actual = I.cabeza
 
         override fun hasNext(): Boolean = (actual != null)
         override fun next(): Arco {
             if(actual == null) throw NoSuchElementException("No quedan elementos que iterar")
-            val valor = actual!!.valor
+            val valor :Arco = actual!!.valor
             actual = actual?.proximo
             return valor
         }
     }
 
-    override operator fun iterator() : Iterator<Arco> = iteraGrafo(this)
+    override operator fun iterator() : Iterator<Arco> = iteradorDigrafo(this)
     /* Agrega un arco al grafo recibe como parametro un Arco complejidad: O(1)
        retorna true
      */
     fun agregarArco(a: Arco) : Boolean {
 
-        val desde : Int = a.fuente()
-        val hasta : Int = a.sumidero()
+        val desde: Int = a.fuente()
+        val hasta: Int = a.sumidero()
+        val arcoNodo: Nodo<Arco> = Nodo(a)
+
+        if (cabeza == null) {
+            cabeza = arcoNodo
+        } else {
+            arcoNodo.proximo = cabeza
+            cabeza = arcoNodo
+        }
 
 
         arregloVertices[desde].aggVerticelistaAdyacencia(hasta)
@@ -97,11 +102,20 @@ public class GrafoDirigido : Grafo {
         arregloVertices[desde].aumentarGradoExterior()
         arregloVertices[hasta].aumentarGradoInterior()
 
-
         return true
     }
-
-    override fun obtenerArregloVertices(): ArrayList<Vertice> {
+    override fun adyacentes(v: Int) : Iterable<Arco>{
+        if (v > numDeVertices) throw RuntimeException("El vertice ${v} no existe.")
+        
+        var adyacentes: MutableList<Arco> = mutableListOf()
+        val iteradorArcos = iterator()
+        while (iteradorArcos.hasNext()){
+            val valor: Arco = iteradorArcos.next()
+            if (valor.fuente() == v) adyacentes.add(iteradorArcos.next())
+        }
+        return adyacentes
+    }
+    fun obtenerArregloVertices(): ArrayList<Vertice> {
         return arregloVertices
     }
 
@@ -145,4 +159,8 @@ public class GrafoDirigido : Grafo {
         }
         return GrafString
     }
+}
+class Nodo<Arco>(valor: Arco){
+    var valor: Arco = valor
+    var proximo: Nodo<Arco>? = null
 }
