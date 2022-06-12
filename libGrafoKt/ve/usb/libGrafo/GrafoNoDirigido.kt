@@ -69,7 +69,7 @@ public class GrafoNoDirigido: Grafo {
         return true
     }
 
-    fun obtenerArregloVertices(): ArrayList<Vertice> {
+    override fun obtenerArregloVertices(): ArrayList<Vertice> {
         return arregloVertices
     }
 

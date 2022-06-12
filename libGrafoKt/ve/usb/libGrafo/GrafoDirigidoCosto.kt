@@ -79,7 +79,7 @@ public class GrafoDirigidoCosto : Grafo {
             }
         }
     }
-    fun obtenerArregloVerticesCosto(): ArrayList<VerticeCosto> {
+    override fun obtenerArregloVertices(): ArrayList<VerticeCosto> {
         return arregloVerticesCosto
     }
 

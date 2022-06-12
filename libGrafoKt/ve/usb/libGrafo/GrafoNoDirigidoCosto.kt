@@ -89,7 +89,7 @@ public class GrafoNoDirigidoCosto: Grafo{
         return adyacentes
     }
 
-    fun obtenerArregloVerticesCosto(): ArrayList<VerticeCosto> {
+    override fun obtenerArregloVertices(): ArrayList<VerticeCosto> {
         return arregloVerticesCosto
     }
 

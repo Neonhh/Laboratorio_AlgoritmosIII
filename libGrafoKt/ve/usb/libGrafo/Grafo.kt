@@ -50,6 +50,9 @@ interface Grafo : Iterable<Lado> {
     //abstract fun vertice(any: Any?)
 
     fun esVacio(): Boolean
+    
+    fun obtenerArregloVertices() : ArrayList<Any>
+
 }
 //Clase vertice donde se esta el id del vertice y su lista de adyacencia
 open class Vertice(val id: Int) : LinkedList<Int>(){

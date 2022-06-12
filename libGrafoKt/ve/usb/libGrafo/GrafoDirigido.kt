@@ -111,11 +111,11 @@ public class GrafoDirigido : Grafo {
         val iteradorArcos = iterator()
         while (iteradorArcos.hasNext()){
             val valor: Arco = iteradorArcos.next()
-            if (valor.fuente() == v) adyacentes.add(iteradorArcos.next())
+            if (valor.fuente() == v) adyacentes.add(valor)
         }
         return adyacentes
     }
-    fun obtenerArregloVertices(): ArrayList<Vertice> {
+    override fun obtenerArregloVertices(): ArrayList<Vertice> {
         return arregloVertices
     }
 
@@ -159,8 +159,4 @@ public class GrafoDirigido : Grafo {
         }
         return GrafString
     }
-}
-class Nodo<Arco>(valor: Arco){
-    var valor: Arco = valor
-    var proximo: Nodo<Arco>? = null
 }

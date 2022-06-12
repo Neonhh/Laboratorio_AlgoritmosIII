@@ -5,7 +5,7 @@ package ve.usb.libGrafo
    Con la creación de la instancia, se ejecuta el algoritmo BFS
    desde el vértice s
 */
-public class BFS(val g: Grafo<Vertice>, val s: Int) {
+public class BFS(val g: Grafo, val s: Int) {
 
     var cola: MutableList<Vertice> = mutableListOf()
     val verticeS: Vertice = g.obtenerArregloVertices()[s]
