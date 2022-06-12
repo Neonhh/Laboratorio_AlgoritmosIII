@@ -5,7 +5,7 @@ public class GrafoNoDirigidoCosto: Grafo{
     
     override var numDeLados : Int = 0
     override var numDeVertices : Int = 0
-    var arregloVerticesCosto = ArrayList<VerticeCosto>(numDeVertices)
+    var arregloVertices = ArrayList<Vertice>(numDeVertices)
     var cabeza: Nodo<AristaCosto>? = null
 
     override fun esVacio(): Boolean = (numDeVertices == 0)
@@ -16,7 +16,7 @@ public class GrafoNoDirigidoCosto: Grafo{
     constructor(numDeVerticesIn: Int) {
         numDeVertices = numDeVerticesIn
         for (i in 0..numDeVertices-1){
-            arregloVerticesCosto.add(VerticeCosto(i))
+            arregloVertices.add(Vertice(i))
         }
     }
 
@@ -33,7 +33,7 @@ public class GrafoNoDirigidoCosto: Grafo{
             if (contador == 0) {
                 numDeVertices = it.toInt()
                 for (i in 0..numDeVertices-1) {
-                    arregloVerticesCosto.add(VerticeCosto(i))
+                    arregloVertices.add(Vertice(i))
                 }
                 contador += 1
             } else if (contador == 1) {
@@ -57,13 +57,13 @@ public class GrafoNoDirigidoCosto: Grafo{
         val ver2Id: Int = a.segundo()
         val cos: Double = a.costo()
 
-        arregloVerticesCosto[ver1Id].aggVerticelistaAdyacencia(ver2Id,cos)
-        arregloVerticesCosto[ver1Id].aumentarGradoInterior()
-        arregloVerticesCosto[ver1Id].aumentarGradoExterior()
+        arregloVertices[ver1Id].aggVerticelistaAdyacencia(ver2Id,cos)
+        arregloVertices[ver1Id].aumentarGradoInterior()
+        arregloVertices[ver1Id].aumentarGradoExterior()
 
-        arregloVerticesCosto[ver2Id].aggVerticelistaAdyacencia(ver1Id,cos)
-        arregloVerticesCosto[ver2Id].aumentarGradoInterior()
-        arregloVerticesCosto[ver2Id].aumentarGradoExterior()
+        arregloVertices[ver2Id].aggVerticelistaAdyacencia(ver1Id,cos)
+        arregloVertices[ver2Id].aumentarGradoInterior()
+        arregloVertices[ver2Id].aumentarGradoExterior()
         numDeLados += 1
 
         return true
@@ -89,8 +89,8 @@ public class GrafoNoDirigidoCosto: Grafo{
         return adyacentes
     }
 
-    override fun obtenerArregloVertices(): ArrayList<VerticeCosto> {
-        return arregloVerticesCosto
+    override fun obtenerArregloVertices(): ArrayList<Vertice> {
+        return arregloVertices
     }
 
     // Retorna los lados adyacentes al vértice v, es decir, los lados que contienen al vértice v
@@ -112,7 +112,7 @@ public class GrafoNoDirigidoCosto: Grafo{
     // El grado es la suma del grado interior y el exterior
     // recibe como parametros un int v que debe ser el id del vertice
     override fun grado(v: Int) : Int {
-        return arregloVerticesCosto[v].gradoInterior+arregloVerticesCosto[v].gradoExterior
+        return arregloVertices[v].gradoInterior+arregloVertices[v].gradoExterior
     }
 
     inner class iteradorGrafoCosto(I: GrafoNoDirigidoCosto): Iterator<AristaCosto> {
@@ -136,8 +136,8 @@ public class GrafoNoDirigidoCosto: Grafo{
      */
     override fun toString() : String {
         var GrafString: String = ""
-        for (vertice in arregloVerticesCosto){
-            GrafString += "${vertice.listaAdyacenciaCostoToString()}\n"
+        for (vertice in arregloVertices){
+            GrafString += "${vertice.listaAdyacenciaToString()}\n"
         }
         return GrafString
     }

@@ -14,9 +14,7 @@ libGrafoKt.jar: $(GLIB)/Color.class\
 		$(GLIB)/GrafoDirigido.class\
 		$(GLIB)/GrafoDirigidoCosto.class\
 		$(GLIB)/GrafoNoDirigido.class\
-		$(GLIB)/GrafoNoDirigidoCosto.class\
-		$(GLIB)/BFS.class\
-		$(GLIB)/DFS.class\
+		$(GLIB)/GrafoNoDirigidoCosto.class
 	jar -cvf $@ $(GLIB)/*.class 
 
 $(GLIB)/Color.class: $(GLIB)/Color.kt
@@ -52,10 +50,5 @@ $(GLIB)/GrafoNoDirigido.class: $(GLIB)/GrafoNoDirigido.kt
 $(GLIB)/GrafoNoDirigidoCosto.class: $(GLIB)/GrafoNoDirigidoCosto.kt
 	$(KC) $(KFLAG) $(GLIB): $(GLIB)/GrafoNoDirigidoCosto.kt
 
-$(GLIB)/DFS.class: $(GLIB)/DFS.kt
-	$(KC) $(KFLAG) $(GLIB): $(GLIB)/DFS.kt
-
-$(GLIB)/BFS.class: $(GLIB)/BFS.kt
-	$(KC) $(KFLAG) $(GLIB): $(GLIB)/BFS.kt
 clean:
 	rm -rf libGrafoKt.jar META-INF $(GLIB)/*.class

@@ -6,7 +6,7 @@ package ve.usb.libGrafo
    desde todos los vértices del grafo
 */
 
-public class DFS(val g: Grafo<Vertice>) {
+public class DFS(val g: Grafo) {
     var tiempo: Int = 0
     init {
 
@@ -21,7 +21,7 @@ public class DFS(val g: Grafo<Vertice>) {
         }
     }
 
-    private fun dfsVisit(g: Grafo<Vertice>, v: Vertice) {
+    private fun dfsVisit(g: Grafo, v: Vertice) {
         tiempo += 1 // Se empieza a explorar v
         v.tiempoInicial = tiempo // Tiempo inicial
         v.color = Color.GRIS
@@ -36,9 +36,9 @@ public class DFS(val g: Grafo<Vertice>) {
         }
         else {
             for (u in v.listaAdyacencia) {
-                if (g.obtenerArregloVertices()[u].color == Color.GRIS) {
-                    g.obtenerArregloVertices()[u].pred = v.obtenerId()
-                    dfsVisit(g, g.obtenerArregloVertices()[u])
+                if (g.obtenerArregloVertices()[u.first].color == Color.GRIS) {
+                    g.obtenerArregloVertices()[u.first].pred = v.obtenerId()
+                    dfsVisit(g, g.obtenerArregloVertices()[u.first])
                 }
             }
         }
@@ -141,7 +141,7 @@ public class DFS(val g: Grafo<Vertice>) {
     fun hayLadosDeBosque(): Boolean {
         for (v in g.obtenerArregloVertices()){
             for (x in v.listaAdyacencia){
-                if ( g.obtenerArregloVertices()[x].tiempoInicial == v.tiempoInicial+1  ){
+                if ( g.obtenerArregloVertices()[x.first].tiempoInicial == v.tiempoInicial+1  ){
                     return true
                 }
             }
@@ -159,8 +159,8 @@ public class DFS(val g: Grafo<Vertice>) {
     fun hayLadosDeIda(): Boolean {
         for (v in g.obtenerArregloVertices()){
             for (x in v.listaAdyacencia){
-                if ( v.tiempoInicial+1 < g.obtenerArregloVertices()[x].tiempoInicial &&
-                    g.obtenerArregloVertices()[x].tiempoFinal+1 < v.tiempoFinal ){
+                if ( v.tiempoInicial+1 < g.obtenerArregloVertices()[x.first].tiempoInicial &&
+                    g.obtenerArregloVertices()[x.first].tiempoFinal+1 < v.tiempoFinal ){
                     return true
                 }
             }
@@ -178,8 +178,8 @@ public class DFS(val g: Grafo<Vertice>) {
     fun hayLadosDeVuelta(): Boolean {
         for (v in g.obtenerArregloVertices()){
             for (x in v.listaAdyacencia){
-                if ( v.tiempoInicial > g.obtenerArregloVertices()[x].tiempoInicial &&
-                    g.obtenerArregloVertices()[x].tiempoFinal > v.tiempoFinal ){
+                if ( v.tiempoInicial > g.obtenerArregloVertices()[x.first].tiempoInicial &&
+                    g.obtenerArregloVertices()[x.first].tiempoFinal > v.tiempoFinal ){
                     return true
                 }
             }
@@ -197,8 +197,8 @@ public class DFS(val g: Grafo<Vertice>) {
     fun hayLadosCruzados(): Boolean {
         for (v in g.obtenerArregloVertices()){
             for (x in v.listaAdyacencia){
-                if ( v.tiempoInicial > g.obtenerArregloVertices()[x].tiempoFinal ||
-                    g.obtenerArregloVertices()[x].tiempoInicial > v.tiempoFinal ){
+                if ( v.tiempoInicial > g.obtenerArregloVertices()[x.first].tiempoFinal ||
+                    g.obtenerArregloVertices()[x.first].tiempoInicial > v.tiempoFinal ){
                     return true
                 }
             }

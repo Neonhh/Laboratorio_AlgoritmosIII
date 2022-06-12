@@ -6,7 +6,7 @@ public class GrafoDirigidoCosto : Grafo {
 
     override var numDeVertices: Int = 0
     override var numDeLados: Int = 0
-    var arregloVerticesCosto = ArrayList<VerticeCosto>(numDeVertices)
+    var arregloVertices = ArrayList<Vertice>(numDeVertices)
     var cabeza: Nodo<ArcoCosto>? = null
 
 
@@ -32,10 +32,10 @@ public class GrafoDirigidoCosto : Grafo {
         val hasta: Int = a.sumidero()
         val cos: Double = a.costo()
 
-        arregloVerticesCosto[desde].aggVerticelistaAdyacencia(hasta, cos)
+        arregloVertices[desde].aggVerticelistaAdyacencia(hasta, cos)
         numDeLados += 1
-        arregloVerticesCosto[desde].aumentarGradoExterior()
-        arregloVerticesCosto[hasta].aumentarGradoInterior()
+        arregloVertices[desde].aumentarGradoExterior()
+        arregloVertices[hasta].aumentarGradoInterior()
 
 
         return flag
@@ -45,7 +45,7 @@ public class GrafoDirigidoCosto : Grafo {
     constructor(numDeVerticesIn: Int) {
         numDeVertices = numDeVerticesIn
         for (i in 0..numDeVertices-1){
-            arregloVerticesCosto.add(VerticeCosto(i))
+            arregloVertices.add(Vertice(i))
         }
     }
 
@@ -61,9 +61,9 @@ public class GrafoDirigidoCosto : Grafo {
         archivo.forEachLine {
             if (contador == 0) {
                 numDeVertices = it.toInt()
-                arregloVerticesCosto = ArrayList<VerticeCosto>(numDeVertices)
+                arregloVertices = ArrayList<Vertice>(numDeVertices)
                 for (i in 0..numDeVertices-1) {
-                    arregloVerticesCosto.add(VerticeCosto(i))
+                    arregloVertices.add(Vertice(i))
                 }
                 contador += 1
             } else if (contador == 1) {
@@ -79,27 +79,27 @@ public class GrafoDirigidoCosto : Grafo {
             }
         }
     }
-    override fun obtenerArregloVertices(): ArrayList<VerticeCosto> {
-        return arregloVerticesCosto
+    override fun obtenerArregloVertices(): ArrayList<Vertice> {
+        return arregloVertices
     }
 
     // Retorna el grado de un vertice del grafo complejidad: O(1)
     // El grado es la suma del grado interior y el exterior
     // recibe como parametros un int v que debe ser el id del vertice
     override fun grado(v: Int): Int {
-        return arregloVerticesCosto[v].gradoInterior + arregloVerticesCosto[v].gradoExterior
+        return arregloVertices[v].gradoInterior + arregloVertices[v].gradoExterior
     }
 
     // Retorna el grado exterior de un vertice del grafo complejidad: O(1)
     // recibe como parametros un int v que debe ser el id del vertice
     fun gradoExterior(v: Int): Int {
-        return arregloVerticesCosto[v].gradoExterior
+        return arregloVertices[v].gradoExterior
     }
 
     // Retorna el grado interior de un vertice del grafo complejidad: O(1)
     // recibe como parametros un int v que debe ser el id del vertice
     fun gradoInterior(v: Int): Int {
-        return arregloVerticesCosto[v].gradoInterior
+        return arregloVertices[v].gradoInterior
     }
 
     // Retorna el número de lados del grafo complejidad: O(1)
@@ -162,8 +162,8 @@ public class GrafoDirigidoCosto : Grafo {
     
     override fun toString() : String {
         var GrafString: String = ""
-        for (vertice in arregloVerticesCosto){
-            GrafString += "${vertice.listaAdyacenciaCostoToString()}\n"
+        for (vertice in arregloVertices){
+            GrafString += "${vertice.listaAdyacenciaToString()}\n"
         }
         return GrafString
     }

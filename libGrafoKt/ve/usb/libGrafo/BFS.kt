@@ -36,7 +36,7 @@ public class BFS(val g: Grafo, val s: Int) {
             }
             else{
                 for(v in verticeU.listaAdyacencia){
-                    val verticeV: Vertice = g.obtenerArregloVertices()[v]
+                    val verticeV: Vertice = g.obtenerArregloVertices()[v.first]
                     if(verticeV.color == Color.BLANCO){
                         verticeV.color = Color.GRIS
                         verticeV.distancia = verticeU.distancia + 1

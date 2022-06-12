@@ -51,35 +51,35 @@ interface Grafo : Iterable<Lado> {
 
     fun esVacio(): Boolean
     
-    fun obtenerArregloVertices() : ArrayList<Any>
+    fun obtenerArregloVertices() : ArrayList<Vertice>
 
 }
 //Clase vertice donde se esta el id del vertice y su lista de adyacencia
-open class Vertice(val id: Int) : LinkedList<Int>(){
+open class Vertice(val id: Int, val costo: Double = -1.0) : LinkedList<Pair<Int,Double>>(){
     var gradoExterior:Int =0
     var gradoInterior:Int =0
-    var listaAdyacencia = LinkedList<Int>()
+    var listaAdyacencia = LinkedList<Pair<Int,Double>>()
     var color: Color = Color.BLANCO
     var pred : Int = -1
     var tiempoInicial: Int = 0
     var tiempoFinal: Int =0
     var distancia: Int =-1
     init {
-        listaAdyacencia.addFirst(id)
+        listaAdyacencia.addFirst(Pair(id,costo))
     }
     // Retorna el id del vertice
     fun obtenerId() : Int{
         return id
     }
     //Retorna la lista de adyacencia del vertice complejidad: O(E)
-    fun obtenerAdyacencias() : LinkedList<Int> {
+    fun obtenerAdyacencias() : LinkedList<Pair<Int,Double>> {
         return listaAdyacencia
     }
     //agrega un vertice a la lista de adyacencia complejidad: O(1)
     //recibe el int id del vertice que se quiere agregar a la lista
     //retorna true
-    fun aggVerticelistaAdyacencia(vId: Int) : Boolean{
-        listaAdyacencia.addLast(vId)
+    fun aggVerticelistaAdyacencia(vId: Int, vCosto: Double = -1.0) : Boolean{
+        listaAdyacencia.addLast(Pair(vId,vCosto))
 
         return true
     }
@@ -101,38 +101,15 @@ open class Vertice(val id: Int) : LinkedList<Int>(){
         var lados :String = "Vertice ${id}:  "
 
         for(lado in listaAdyacencia.subList(1,listaAdyacencia.size)) {
-            lados += "${lado} "
+            val ladoId: Int = lado.first
+            lados += "${ladoId} "
+            if (lado.second != -1.0) lados += "(Costo: ${lado.second}) "
+            lados += "; "
         }
         return lados
     }
 }
-// Clase vertice usada para los grafos con costo
-public class VerticeCosto(val costoId: Int) : Vertice(costoId) {
 
-    var listaAdyacenciaCosto = LinkedList<Pair<Int,Double>>()
-    init {
-        listaAdyacenciaCosto.addFirst(Pair(costoId,0.0))
-    }
-    // agrega un vertice a la lista de adyacencia complejidad: O(1)
-    // recibe como parametros el int id del vertice que se quiere agregar a la lista y un Double que es el costo
-    fun aggVerticelistaAdyacencia(vId: Int, costo: Double) : Boolean{
-        listaAdyacenciaCosto.addLast(Pair(vId,costo));
-        return true
-    }
-    fun obtenerAdyacenciasCosto() : LinkedList<Pair<Int,Double>>{
-        return listaAdyacenciaCosto
-    }
-    // retorna un string con todos los vertices adyacentes complejidad: O(E)
-    fun listaAdyacenciaCostoToString() :String{
-
-        var lados :String = "Vertice ${costoId}: "
-
-        for(lado in listaAdyacenciaCosto.subList(1,listaAdyacenciaCosto.size)) {
-            lados += "${lado.first} (${lado.second}) "
-        }
-        return lados
-    }
-}
 
 class Nodo<Lado>(valor: Lado){
     var valor: Lado = valor
