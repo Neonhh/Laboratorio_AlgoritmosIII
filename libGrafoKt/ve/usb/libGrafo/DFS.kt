@@ -26,22 +26,13 @@ public class DFS(val g: Grafo) {
         v.tiempoInicial = tiempo // Tiempo inicial
         v.color = Color.GRIS
 
-        if (v is VerticeCosto) {
-            for (u in v.listaAdyacenciaCosto) {
-                if (g.obtenerArregloVertices()[u.first].color == Color.GRIS) {
-                    g.obtenerArregloVertices()[u.first].pred = v.obtenerId()
-                    dfsVisit(g, g.obtenerArregloVertices()[u.first])
-                }
+        for (u in v.listaAdyacencia) {
+            if (g.obtenerArregloVertices()[u.first].color == Color.GRIS) {
+                g.obtenerArregloVertices()[u.first].pred = v.obtenerId()
+                dfsVisit(g, g.obtenerArregloVertices()[u.first])
             }
         }
-        else {
-            for (u in v.listaAdyacencia) {
-                if (g.obtenerArregloVertices()[u.first].color == Color.GRIS) {
-                    g.obtenerArregloVertices()[u.first].pred = v.obtenerId()
-                    dfsVisit(g, g.obtenerArregloVertices()[u.first])
-                }
-            }
-        }
+
         v.color = Color.NEGRO // Se termina de explorar v
         tiempo += 1
         v.tiempoFinal = tiempo

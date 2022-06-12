@@ -23,26 +23,14 @@ public class BFS(val g: Grafo, val s: Int) {
             val verticeU: Vertice = cola[0]
             cola.removeAt(0)
 
-            if (verticeU is VerticeCosto){
-                for(v in verticeU.listaAdyacenciaCosto){
+
+            for(v in verticeU.listaAdyacencia){
                 val verticeV: Vertice = g.obtenerArregloVertices()[v.first]
-                    if(verticeV.color == Color.BLANCO){
-                        verticeV.color = Color.GRIS
-                        verticeV.distancia = verticeU.distancia + 1
-                        verticeV.pred = verticeU.costoId
-                        cola.add(verticeV)
-                    }
-                }
-            }
-            else{
-                for(v in verticeU.listaAdyacencia){
-                    val verticeV: Vertice = g.obtenerArregloVertices()[v.first]
-                    if(verticeV.color == Color.BLANCO){
-                        verticeV.color = Color.GRIS
-                        verticeV.distancia = verticeU.distancia + 1
-                        verticeV.pred = verticeU.id
-                        cola.add(verticeV)
-                    }
+                if(verticeV.color == Color.BLANCO){
+                    verticeV.color = Color.GRIS
+                    verticeV.distancia = verticeU.distancia + 1
+                    verticeV.pred = verticeU.id
+                    cola.add(verticeV)
                 }
             }
             verticeU.color = Color.NEGRO
