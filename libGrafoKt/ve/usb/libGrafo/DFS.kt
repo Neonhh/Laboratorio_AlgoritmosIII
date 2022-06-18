@@ -27,7 +27,7 @@ public class DFS(val g: Grafo) {
         v.color = Color.GRIS
 
         for (u in v.listaAdyacencia) {
-            if (g.obtenerArregloVertices()[u.first].color == Color.GRIS) {
+            if (g.obtenerArregloVertices()[u.first].color == Color.BLANCO) {
                 g.obtenerArregloVertices()[u.first].pred = v.obtenerId()
                 dfsVisit(g, g.obtenerArregloVertices()[u.first])
             }

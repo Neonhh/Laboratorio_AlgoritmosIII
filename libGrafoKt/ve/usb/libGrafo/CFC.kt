@@ -7,18 +7,67 @@ package ve.usb.libGrafo
 */
 public class CFC(val g: GrafoDirigido) {
 
+    var tiempo:Int = 0
+    var CFC: MutableList<MutableSet<Int>> = mutableListOf<MutableSet<Int>>()
+    var cFCId: Int = 0
+    init {
+
+        val inversoG: GrafoDirigido = ve.usb.libGrafo.digrafoInverso(g)
+        val orden = OrdenamientoTopologico(g)
+
+        for (v in g.obtenerArregloVertices()){
+            v.color = Color.BLANCO
+            v.pred = -1
+        }
+        for (v in orden.obtenerOrdenTopologico()){
+            if (v.color == Color.BLANCO){
+                dfsVisitTopologico(inversoG,v)
+            }
+        }
+
+    }
+
+    private fun dfsVisitTopologico(g: GrafoDirigido, v: Vertice){
+        tiempo += 1 // Se empieza a explorar v
+        v.tiempoInicial = tiempo // Tiempo inicial
+        v.color = Color.GRIS
+
+        if (v.pred == -1) CFC.add(mutableSetOf<Int>(v.obtenerId()))
+
+        for (u in v.listaAdyacencia) {
+            if (g.obtenerArregloVertices()[u.first].color == Color.BLANCO) {
+                g.obtenerArregloVertices()[u.first].pred = v.obtenerId()
+                dfsVisitTopologico(g, g.obtenerArregloVertices()[u.first])
+                CFC.elementAt(cFCId).add(u.first)
+            }
+        }
+
+        v.color = Color.NEGRO // Se termina de explorar v
+        if (v.pred == -1) cFCId ++
+        tiempo += 1
+        v.tiempoFinal = tiempo
+    }
+
     /*
      Retorna true si dos vértices están en la misma CFC y
      falso en caso contrario. Si el algunos de los dos vértices de
      entrada, no pertenece al grafo, entonces se lanza un RuntineException
      */
     fun estanEnLaMismaCFC(v: Int, u: Int) : Boolean {
-	
+	    if (v >=  g.obtenerNumeroDeVertices() || u >= g.obtenerNumeroDeVertices())
+            throw RuntimeException("Uno de los vertices no pertenece al grafo.")
+        if (v == u) return true
+        for (componenteCFC in CFC ) {
+            if(componenteCFC.contains(v)) return componenteCFC.contains(u)
+
+            if(componenteCFC.contains(u)) return componenteCFC.contains(v)
+        }
+        return false
     }
 
     // Indica el número de componentes fuertemente conexas del digrafo.
     fun numeroDeCFC() : Int {
-	
+        return cFCId + 1
     }
 
     /*
@@ -27,7 +76,11 @@ public class CFC(val g: GrafoDirigido) {
      Si el vértice v no pertenece al grafo g se lanza una RuntimeException
      */
     fun obtenerIdentificadorCFC(v: Int) : Int {
-	
+        if (v >=  g.obtenerNumeroDeVertices()) throw RuntimeException("El vertice no pertenece al grafo.")
+        for (i in 0..cFCId){
+            if (CFC.elementAt(i).contains(v)) return i
+        }
+        return -1
     }
     
     /*
@@ -35,8 +88,8 @@ public class CFC(val g: GrafoDirigido) {
      como un  conjunto de vértices. El orden de las CFCs en el objeto iterable,
      debe corresponder al que se indica en el método obtenerIdentificadorCFC
      */
-    fun  obternerCFC() : Iterable<MutableSet<Int>> {
-	
+    fun  obtenerCFC() : Iterable<MutableSet<Int>> {
+	    return CFC
     }
 
     /*
@@ -49,8 +102,20 @@ public class CFC(val g: GrafoDirigido) {
      y se va a tener que el en grafo componente el vértice 0 
      representa a la CFC que contiene a los vértices 5,6 y 8 de G.
      */
-    fun obtenerGrafoComponente() : GrafoNoDirigido {
-	
+    fun obtenerGrafoComponente() : GrafoDirigido {
+	    var grafoComponente = GrafoDirigido(numeroDeCFC())
+        val grafoIterador = grafoComponente.iterator()
+
+        while (grafoIterador.hasNext()) {
+            val arco: Arco = grafoIterador.next()
+            val v: Int = arco.fuente()
+            val u: Int = arco.sumidero()
+
+            if (!estanEnLaMismaCFC(v, u)) {
+                grafoComponente.agregarArco(Arco(obtenerIdentificadorCFC(v), obtenerIdentificadorCFC(u)))
+            }
+        }
+        return grafoComponente
     }
 
 }

@@ -64,6 +64,8 @@ open class Vertice(val id: Int, val costo: Double = -1.0) : LinkedList<Pair<Int,
     var tiempoInicial: Int = 0
     var tiempoFinal: Int =0
     var distancia: Int =-1
+    var cc: Int = 0
+
     init {
         listaAdyacencia.addFirst(Pair(id,costo))
     }
